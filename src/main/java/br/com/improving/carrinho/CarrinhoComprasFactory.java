@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 
 /**
  * Classe responsável pela criação e recuperação dos carrinhos de compras.
+ * 
+ * As instâncias de CarrinhoComprasFactory são independentes entre si, ou seja, quando um carrinho 
+ * para um cliente é criado em uma instância, a outra pode criar um novo carrinho para o mesmo 
+ * cliente. Isso é verdade para todos os métodos.
  */
 public class CarrinhoComprasFactory {
 
