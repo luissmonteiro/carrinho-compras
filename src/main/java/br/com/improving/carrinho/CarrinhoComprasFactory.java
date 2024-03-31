@@ -1,6 +1,8 @@
 package br.com.improving.carrinho;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Classe responsável pela criação e recuperação dos carrinhos de compras.
@@ -11,7 +13,10 @@ import java.math.BigDecimal;
  */
 public class CarrinhoComprasFactory {
 
+	private Map<String, CarrinhoCompras> carrinhos;
+
 	public CarrinhoComprasFactory() {
+		this.carrinhos = new HashMap<>();
 	}
 
     /**
@@ -23,6 +28,12 @@ public class CarrinhoComprasFactory {
      * @return CarrinhoCompras
      */
     public CarrinhoCompras criar(String identificacaoCliente) {
+		CarrinhoCompras carrinho = this.carrinhos.get(identificacaoCliente);
+		if(carrinho == null) {
+			carrinho = new CarrinhoCompras();
+			this.carrinhos.put(identificacaoCliente, carrinho);
+		}
+		return carrinho;
 
     }
 
@@ -36,7 +47,15 @@ public class CarrinhoComprasFactory {
      * @return BigDecimal
      */
     public BigDecimal getValorTicketMedio() {
-
+		BigDecimal somaTotal = BigDecimal.ZERO;
+		for (CarrinhoCompras carrinho : this.carrinhos.values()) {
+			somaTotal = somaTotal.add(carrinho.getValorTotal());
+		}
+		if (!this.carrinhos.isEmpty()) {
+			return somaTotal.divide(BigDecimal.valueOf(this.carrinhos.size()), 2, BigDecimal.ROUND_HALF_UP);
+		} else {
+			return BigDecimal.ZERO;
+		}
     }
 
     /**
@@ -48,6 +67,7 @@ public class CarrinhoComprasFactory {
      * e false caso o cliente não possua um carrinho.
      */
     public boolean invalidar(String identificacaoCliente) {
+		return this.carrinhos.remove(identificacaoCliente) != null;
 
     }
 }
